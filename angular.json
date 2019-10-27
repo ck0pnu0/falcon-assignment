@@ -28,6 +28,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/material-design-lite/material.min.css",
               "src/styles.scss"
             ],
             "scripts": []
