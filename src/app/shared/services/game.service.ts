@@ -5,7 +5,6 @@ import { PlayerRole } from "../enums/player-role.enum";
 import { CreateMatchData } from "src/app/models/created-match.model";
 import { Observable } from "rxjs";
 import { Board } from "src/app/models/board.model";
-import { Players } from "src/app/models/players.model";
 import { LocalStorageService } from "./local-storage.service";
 import { generateMatrixModel } from "src/app/lib/game-utilities/matrix";
 
@@ -26,18 +25,17 @@ export class GameService {
     // get a brand new board
     const board = generateMatrixModel(7, 6);
 
+    // use dispatch an action for this
     return {
       activePlayer: player,
       board,
-      players: {
-        [player.id]: player
-      }
+      players: [player.id]
     };
   }
 
   createMatch(data: CreateMatchData) {
     const matchId = "someId" || null; // get this from the store if there isn't create it
-    const match = this.getInitialMatchData(data);
+    const match = this.getInitialMatchData(data); // replace with dispatch an action
 
     this.storage.setMyRoleForMatch(matchId, PlayerRole.Player1);
 
@@ -48,10 +46,10 @@ export class GameService {
     // Check in store if this matchId exists
   }
 
-  get matchId() {
+  get matchId(): string {
     //: string
     // return matchId from store
-    return 'someId';
+    return "someId";
   }
 
   setMatchId(matchId: string): void {
@@ -88,7 +86,7 @@ export class GameService {
 
   players$() {
     //: Observable<Players>
-    // get players from the game/Match (should be 2)
+    // get players from the game/Match (should be a length of 2)
   }
 
   setMeAsPlayer2(name: string) {
@@ -97,7 +95,7 @@ export class GameService {
       role: PlayerRole.Player2,
       name: name
     };
-    const matchId = 'someId'; // get matchID from store
+    const matchId = "someId"; // get matchID from store
     this.storage.setMyRoleForMatch(matchId, PlayerRole.Player2);
 
     // set player2 to the game/match - players state
