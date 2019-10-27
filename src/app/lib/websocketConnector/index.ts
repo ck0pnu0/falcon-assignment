@@ -1,7 +1,7 @@
-import * as  websocket from 'websocket';
-import { Observable, Subject } from 'rxjs';
-import { shareReplay, filter, takeUntil } from 'rxjs/operators';
-import { createEventEmitter } from './event_emitter';
+import * as websocket from "websocket";
+import { Observable, Subject } from "rxjs";
+import { shareReplay, filter, takeUntil } from "rxjs/operators";
+import { createEventEmitter } from "./event_emitter";
 
 /**
  * Creates an observable that, when subscribed to, will emit
@@ -12,21 +12,23 @@ import { createEventEmitter } from './event_emitter';
  *
  * @param client
  */
-const createDownstreamObservable = (client: websocket.w3cwebsocket): Observable<any> => {
+const createDownstreamObservable = (
+  client: websocket.w3cwebsocket
+): Observable<any> => {
   const { addEventHandler } = createEventEmitter(client);
-  const connection = Observable.create((observer) => {
-    const next = (ev) => {
+  const connection = Observable.create(observer => {
+    const next = ev => {
       let data;
       try {
         data = JSON.parse(ev.data);
-      } catch (e) { }
+      } catch (e) {}
       observer.next({ data, event: ev });
     };
     const unsubs = [
-      addEventHandler('onopen', next),
-      addEventHandler('onmessage', next),
-      addEventHandler('onerror', ev => observer.error(ev)),
-      addEventHandler('onclose', (ev) => {
+      addEventHandler("onopen", next),
+      addEventHandler("onmessage", next),
+      addEventHandler("onerror", ev => observer.error(ev)),
+      addEventHandler("onclose", ev => {
         next(ev);
         observer.complete();
       })
@@ -57,7 +59,7 @@ export const createClient = (host: string, port: number) => {
           channelName
         });
       } catch (e) {
-        throw new Error('INVALID MESSAGE');
+        throw new Error("INVALID MESSAGE");
       }
 
       if (client.readyState !== client.OPEN) {
@@ -72,24 +74,25 @@ export const createClient = (host: string, port: number) => {
       client.send(encodedPayload);
     };
 
-    const join = (channelName: string, channelConfig = { maxSize: Number.MAX_SAFE_INTEGER }) => {
+    const join = (
+      channelName: string,
+      channelConfig = { maxSize: Number.MAX_SAFE_INTEGER }
+    ) => {
       const userLeft = new Subject();
       const channelDownstream = downstream.pipe(
-        filter(resp => (
-          resp.data && resp.data.channel.name === channelName
-        )),
+        filter(resp => resp.data && resp.data.channel.name === channelName),
         takeUntil(userLeft)
       );
 
       const JOIN_EVENT = {
-        type: 'JOIN_CHANNEL',
+        type: "JOIN_CHANNEL",
         payload: {
           name: channelName,
           ...channelConfig
         }
       };
       const LEAVE_EVENT = {
-        type: 'LEAVE_CHANNEL'
+        type: "LEAVE_CHANNEL"
       };
 
       send(channelName, JOIN_EVENT);
@@ -122,9 +125,9 @@ export const createClient = (host: string, port: number) => {
         and handling messages send before connection was established.
     */
     const backlogSub = downstream
-      .pipe(filter(resp => resp.event.type === 'open'))
+      .pipe(filter(resp => resp.event.type === "open"))
       .subscribe(() => {
-        backlog.forEach(lazySend => lazySend());
+        backlog.forEach((lazySend: any) => lazySend());
         backlogSub.unsubscribe();
       });
 
@@ -148,7 +151,7 @@ export const createClient = (host: string, port: number) => {
      */
     close() {
       if (!client) {
-        throw new Error('Client is not connected');
+        throw new Error("Client is not connected");
       }
       client.close();
       client = null;
@@ -162,10 +165,15 @@ export const createClient = (host: string, port: number) => {
      */
     connect(meta = {}) {
       if (client) {
-        throw new Error('Client is already connected');
+        throw new Error("Client is already connected");
       }
-      client = new websocket.w3cwebsocket(`ws://${host}:${port}/`, ['echo-protocol']);
-      return connect(client, meta);
+      client = new websocket.w3cwebsocket(`ws://${host}:${port}/`, [
+        "echo-protocol"
+      ]);
+      return connect(
+        client,
+        meta
+      );
     }
   };
 };

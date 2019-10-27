@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { createClient } from "../lib/websocketConnector"; // path
+import { createClient } from "../lib/websocketConnector";
 
 export interface Channel {
   send(message: any): void;
