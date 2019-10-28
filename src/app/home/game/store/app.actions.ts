@@ -2,7 +2,10 @@ import { createAction, props } from "@ngrx/store";
 import { PlayerRole } from "src/app/shared/enums/player-role.enum";
 
 // Match
-export const startMatch = createAction("[Match] Start Match");
+export const startMatch = createAction(
+  "[Match] Start Match",
+  props<{ matchId: string }>()
+); // this will also create a new board (empty)
 export const joinMatch = createAction(
   "[Match] Join Match",
   props<{ matchId: string }>()
@@ -11,25 +14,29 @@ export const selectBoardCell = createAction(
   "[Match] Select Board Cell",
   props<{ col: number; row: number }>()
 );
-export const leaveMatch = createAction(
-  "[Match] Leave Match and update Winner Player",
-  props<{ matchId: string; winnerPlayer: string; end: boolean }>()
-);
 export const endMatch = createAction(
   "[Match] End Match and Update Winner Player",
-  props<{ winnerPlayer: string; end: boolean }>()
+  props<{ matchId: string; playerWin: PlayerRole; matchEnd: boolean }>()
 );
 
 // Players
 export const updateActivePlayer = createAction(
-  "[Match] Update Active Player",
-  props<{ id: string; name: string; role: PlayerRole }>()
+  "[Match Players] Update Active Player",
+  props<{ playerRole: PlayerRole }>()
 );
 export const updateWinnerPlayer = createAction(
-  "[Match] Update Winning Player",
-  props<{ id: string; name: string; role: PlayerRole }>()
+  "[Match Players] Update Winning Player",
+  props<{ playerRole: PlayerRole }>()
 );
 export const setPlayerRole = createAction(
-  "[Match] Update Player Role",
-  props<{ id: string; name: string; role: PlayerRole }>()
+  "[Match Players] Update Player Role",
+  props<{ playerRole: PlayerRole }>()
+);
+export const setPlayerOne = createAction(
+  "[Match Players] Set Player One",
+  props<{ playerRole: PlayerRole }>()
+);
+export const setPlayerTwo = createAction(
+  "[Match Players] Set Player Two",
+  props<{ playerRole: PlayerRole }>()
 );

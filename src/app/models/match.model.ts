@@ -1,11 +1,13 @@
 import { Matrix } from "../lib/game-utilities/matrix";
-import { Player } from "./player.model";
+import { PlayerRole } from "../shared/enums/player-role.enum";
 
 export interface Match {
   id: string;
   board: Matrix;
-  activePlayer: Player;
-  winnerPlayer: Player;
+  player1: PlayerRole;
+  player2: PlayerRole;
+  activePlayer: PlayerRole;
+  winnerPlayer: PlayerRole;
   players: string[];
   end: boolean;
 }

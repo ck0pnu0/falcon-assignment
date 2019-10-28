@@ -1,8 +1,7 @@
-import { PlayerRole } from "../shared/enums/player-role.enum";
+import { Player } from "./player.model";
 
 export interface LocalStorageData {
-  playerId: string;
-  match: {
-    [matchId: string]: PlayerRole;
-  };
+  playerOne: Player;
+  playerTwo: Player;
+  matchId: string;
 }

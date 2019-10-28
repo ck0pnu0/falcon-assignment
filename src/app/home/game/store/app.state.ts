@@ -1,5 +1,5 @@
-import { Matrix } from "src/app/lib/game-utilities/matrix";
-import { Player } from "src/app/models/player.model";
+import { Matrix } from "../../../lib/game-utilities/matrix";
+import { Player } from "../../../models/player.model";
 
 export class MatchState {
   static stateName = "MatchState";
