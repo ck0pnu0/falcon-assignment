@@ -56,6 +56,13 @@ export class LocalStorageService {
     }
   }
 
+  getPlayerOneId() {
+    if (!this.getPlayerOne()) {
+      return null;
+    }
+    return this.getPlayerOne().id;
+  }
+
   getPlayerTwo(): Player {
     const { playerTwo } = this.get();
     return playerTwo;
@@ -72,6 +79,13 @@ export class LocalStorageService {
 
       localStorage.setItem(this.STORAGE_ID, JSON.stringify(existingData));
     }
+  }
+
+  getPlayerTwoId() {
+    if (!this.getPlayerTwo()) {
+      return null;
+    }
+    return this.getPlayerTwo().id;
   }
 
   generateRandomUUID() {

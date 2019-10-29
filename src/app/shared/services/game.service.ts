@@ -17,9 +17,9 @@ export class GameService {
   private getInitialMatchData(data: CreateMatchData): Partial<Match> {
     // set host player data
     const player: Player = {
-      id: this.storage.getPlayerId(), // get id for player
-      role: PlayerRole.Player1,
-      name: data.player1Name
+      id: this.storage.getPlayerOneId(),
+      role: PlayerRole.Player1
+      // name: data.player1Name
     };
 
     // get a brand new board
@@ -27,7 +27,7 @@ export class GameService {
 
     // use dispatch an action for this
     return {
-      activePlayer: player,
+      activePlayer: player.role,
       board,
       players: [player.id]
     };
@@ -37,7 +37,8 @@ export class GameService {
     const matchId = "someId" || null; // get this from the store if there isn't create it
     const match = this.getInitialMatchData(data); // replace with dispatch an action
 
-    this.storage.setMyRoleForMatch(matchId, PlayerRole.Player1);
+    this.storage.setMatchId(matchId);
+    // set matchId for the match in store
 
     // dispatch an action for creating a new Match (start game);
   }
@@ -46,14 +47,8 @@ export class GameService {
     // Check in store if this matchId exists
   }
 
-  get matchId(): string {
-    //: string
-    // return matchId from store
-    return "someId";
-  }
-
-  setMatchId(matchId: string): void {
-    // set matchId for the match in store
+  getMatchId(): string {
+    return this.storage.getMatchId();
   }
 
   board$() {
@@ -91,12 +86,11 @@ export class GameService {
 
   setMeAsPlayer2(name: string) {
     const player: Player = {
-      id: this.storage.getPlayerId(),
-      role: PlayerRole.Player2,
-      name: name
+      id: this.storage.getPlayerTwoId(),
+      role: PlayerRole.Player2
     };
     const matchId = "someId"; // get matchID from store
-    this.storage.setMyRoleForMatch(matchId, PlayerRole.Player2);
+    this.storage.setPlayerTwo();
 
     // set player2 to the game/match - players state
   }
