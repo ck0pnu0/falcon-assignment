@@ -1,12 +1,14 @@
-import { Match } from "src/app/models/match.model";
-import { createReducer, Action, on, props } from "@ngrx/store";
+import { Action, createReducer, on } from "@ngrx/store";
+// import { Match } from "../../../models/match.model";
 import * as matchActions from "./app.actions";
+import { PlayerRole } from "src/app/shared/enums/player-role.enum";
+import { MatchState } from "./app.state";
 
 const initialState: Match = {
   id: null,
   board: [],
-  player1: null,
-  player2: null,
+  playerOne: null,
+  playerTwo: null,
   activePlayer: null,
   winnerPlayer: null,
   players: [],
@@ -15,46 +17,72 @@ const initialState: Match = {
 
 const matchReducer = createReducer(
   initialState,
-  on(matchActions.startMatch, (state: Match, { matchId }) => ({
+  on(matchActions.startMatch, (state: MatchState, { matchId }) => ({
     ...state,
-    id: matchId
+    matchId: matchId
   })),
-  on(matchActions.joinMatch, (state: Match, { matchId }) => ({
+  on(matchActions.joinMatch, (state: MatchState, { matchId }) => ({
     ...state,
-    id: matchId
+    matchId: matchId
   })),
-  on(matchActions.selectBoardCell, (state: Match, { col, row }) => ({
+  on(matchActions.setInitialBoard, (state: MatchState, { initialBoard }) => ({
     ...state,
-    board: [col[row]]
+    matchBoard: initialBoard
+  })),
+  on(matchActions.selectBoardCell, (state: MatchState, { col, row }) => ({
+    ...state,
+    matchBoard: [col[row]]
   })),
   on(
     matchActions.endMatch,
-    (state: Match, { matchId, playerWin, matchEnd }) => ({
+    (state: MatchState, { matchId, playerWin, matchEnd }) => ({
       ...state,
-      id: matchId,
+      matchId: matchId,
       winnerPlayer: playerWin,
-      end: matchEnd
+      endMatch: matchEnd
     })
   ),
-  on(matchActions.updateActivePlayer, (state: Match, { playerRole }) => ({
+  on(
+    matchActions.setFirstPlayerToMatch,
+    (state: MatchState, { playerRole }) => {
+      const playersArr = state.players;
+      playersArr.push(playerRole);
+      return {
+        ...state,
+        players: playersArr
+      };
+    }
+  ),
+  on(
+    matchActions.setSecondPlayerToMatch,
+    (state: MatchState, { playerRole }) => {
+      const playersArr = state.players;
+      playersArr.push(playerRole);
+      return {
+        ...state,
+        players: playersArr
+      };
+    }
+  ),
+  on(matchActions.updateActivePlayer, (state: MatchState, { playerRole }) => ({
     ...state,
     activePlayer: playerRole
   })),
-  on(matchActions.updateWinnerPlayer, (state: Match, { playerRole }) => ({
+  on(matchActions.updateWinnerPlayer, (state: MatchState, { playerRole }) => ({
     ...state,
     winnerPlayer: playerRole
   })),
-  on(matchActions.setPlayerRole, (state: Match, { playerRole }) => ({
+  // on(matchActions.setPlayerRole, (state: MatchState, { playerRole }) => ({
+  //   ...state,
+  //   winnerPlayer: playerRole
+  // })),
+  on(matchActions.setPlayerOne, (state: MatchState, { firstPlayer }) => ({
     ...state,
-    winnerPlayer: playerRole
+    playerOne: firstPlayer
   })),
-  on(matchActions.setPlayerOne, (state: Match, { playerRole }) => ({
+  on(matchActions.setPlayerTwo, (state: MatchState, { secondPlayer }) => ({
     ...state,
-    player1: playerRole
-  })),
-  on(matchActions.setPlayerTwo, (state: Match, { playerRole }) => ({
-    ...state,
-    player2: playerRole
+    playerTwo: secondPlayer
   }))
 );
 

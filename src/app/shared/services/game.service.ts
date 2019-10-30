@@ -1,46 +1,54 @@
 import { Injectable } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { generateMatrixModel } from "src/app/lib/game-utilities/matrix";
+import { Board } from "src/app/models/board.model";
+import { CreateMatchData } from "src/app/models/created-match.model";
 import { Match } from "../../models/match.model";
 import { Player } from "../../models/player.model";
 import { PlayerRole } from "../enums/player-role.enum";
-import { CreateMatchData } from "src/app/models/created-match.model";
-import { Observable } from "rxjs";
-import { Board } from "src/app/models/board.model";
 import { LocalStorageService } from "./local-storage.service";
-import { generateMatrixModel } from "src/app/lib/game-utilities/matrix";
+import {
+  setPlayerOne,
+  setInitialBoard,
+  updateActivePlayer,
+  setFirstPlayerToMatch
+} from "src/app/home/game/store/app.actions";
 
 @Injectable()
 export class GameService {
   // add store as dep to this service
   // private store: Store
-  constructor(private storage: LocalStorageService) {}
+  constructor(
+    private storage: LocalStorageService,
+    private store: Store<Match>
+  ) {}
 
-  private getInitialMatchData(data: CreateMatchData): Partial<Match> {
+  private getInitialMatchData(data: CreateMatchData) {
     // set host player data
     const player: Player = {
       id: this.storage.getPlayerOneId(),
       role: PlayerRole.Player1
-      // name: data.player1Name
     };
-
+    this.store.dispatch(setPlayerOne({ firstPlayer: player }));
     // get a brand new board
     const board = generateMatrixModel(7, 6);
+    this.store.dispatch(setInitialBoard({ initialBoard: board }));
+    this.store.dispatch(updateActivePlayer({ playerRole: player.role }));
+    this.store.dispatch(setFirstPlayerToMatch({ playerRole: player.role }));
 
     // use dispatch an action for this
-    return {
-      activePlayer: player.role,
-      board,
-      players: [player.id]
-    };
+    // this.store.select(); // whole match state for return
+    // return {
+    //   activePlayer: player.role,
+    //   board,
+    //   players: [player.id]
+    // };
   }
 
-  createMatch(data: CreateMatchData) {
+  createMatch() {
     const matchId = "someId" || null; // get this from the store if there isn't create it
-    const match = this.getInitialMatchData(data); // replace with dispatch an action
-
     this.storage.setMatchId(matchId);
-    // set matchId for the match in store
-
-    // dispatch an action for creating a new Match (start game);
+    // set matchId for the match in store (action)
   }
 
   matchExists(matchId: string) {
