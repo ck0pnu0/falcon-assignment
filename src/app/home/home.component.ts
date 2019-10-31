@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { GameService } from "../shared/services/game.service";
+import { LocalStorageService } from "../shared/services/local-storage.service";
 
 @Component({
   selector: "app-home",
@@ -6,7 +8,13 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./home.component.scss"]
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private gameService: GameService,
+    private localStorageService: LocalStorageService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.localStorageService.init();
+    this.gameService.getMatchState();
+  }
 }

@@ -1,105 +1,102 @@
 import { Injectable } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { generateMatrixModel } from "src/app/lib/game-utilities/matrix";
-import { Board } from "src/app/models/board.model";
-import { CreateMatchData } from "src/app/models/created-match.model";
-import { Match } from "../../models/match.model";
-import { Player } from "../../models/player.model";
+import { select, Store } from "@ngrx/store";
+import { Observable } from "rxjs";
+import { AppState } from "src/app/home/game/store/app.state";
+import * as fromActions from "../../home/game/store/app.actions";
+import * as fromGame from "../../home/game/store/app.selectors";
+import { generateMatrixModel, Matrix } from "../../lib/game-utilities/matrix";
 import { PlayerRole } from "../enums/player-role.enum";
+import { DEFAULT_MATCH_ID } from "../global.variables";
 import { LocalStorageService } from "./local-storage.service";
-import {
-  setPlayerOne,
-  setInitialBoard,
-  updateActivePlayer,
-  setFirstPlayerToMatch
-} from "src/app/home/game/store/app.actions";
 
 @Injectable()
 export class GameService {
   // add store as dep to this service
-  // private store: Store
+
   constructor(
     private storage: LocalStorageService,
-    private store: Store<Match>
+    private store: Store<AppState>
   ) {}
 
-  private getInitialMatchData(data: CreateMatchData) {
-    // set host player data
-    const player: Player = {
-      id: this.storage.getPlayerOneId(),
-      role: PlayerRole.Player1
-    };
-    this.store.dispatch(setPlayerOne({ firstPlayer: player }));
-    // get a brand new board
-    const board = generateMatrixModel(7, 6);
-    this.store.dispatch(setInitialBoard({ initialBoard: board }));
-    this.store.dispatch(updateActivePlayer({ playerRole: player.role }));
-    this.store.dispatch(setFirstPlayerToMatch({ playerRole: player.role }));
-
-    // use dispatch an action for this
-    // this.store.select(); // whole match state for return
-    // return {
-    //   activePlayer: player.role,
-    //   board,
-    //   players: [player.id]
-    // };
+  public getMatchState() {
+    return this.store.pipe(select("game"));
   }
 
   createMatch() {
-    const matchId = "someId" || null; // get this from the store if there isn't create it
-    this.storage.setMatchId(matchId);
-    // set matchId for the match in store (action)
+    // Set initial Board
+    const board = this.setBoard();
+    const firstPlayerRole = PlayerRole.Player1;
+
+    // Update localStorage with host player
+    this.storage.setPlayerOne();
+
+    // get Match Id from the LocalStorage
+    this.storage.setMatchId(DEFAULT_MATCH_ID);
+    const id = this.storage.getMatchId();
+    const firstPlayer = this.storage.getPlayerOne();
+
+    const startGameState: AppState = {
+      matchId: id,
+      matchBoard: board,
+      playerOne: firstPlayer,
+      playerTwo: null,
+      activePlayer: firstPlayerRole,
+      winnerPlayer: null,
+      players: [firstPlayerRole],
+      endMatch: false
+    };
+
+    // Store update
+    this.store.dispatch(fromActions.startMatch({ game: startGameState }));
   }
 
   matchExists(matchId: string) {
     // Check in store if this matchId exists
   }
 
-  getMatchId(): string {
-    return this.storage.getMatchId();
+  getMatchId(): Observable<string> {
+    return this.store.pipe(select(fromGame.getMatchId));
   }
 
-  board$() {
-    //: Observable<Board>
-    // return board from the store
+  board$(): Observable<Matrix> {
+    return this.store.pipe(select(fromGame.getMatchBoard));
   }
 
-  setBoard(board: Board) {
-    // set board to store
+  setBoard(): Matrix {
+    return generateMatrixModel(7, 6);
   }
 
-  activePlayer$() {
-    //: Observable<Player>
-    // get activePlayer state from the store (player1 or player2)
+  activePlayer$(): Observable<PlayerRole> {
+    return this.store.pipe(select(fromGame.activePlayerRole));
   }
 
-  setActivePlayer(player: Player) {
-    // set activePlayer state
+  setActivePlayer(playerRole: PlayerRole) {
+    this.store.dispatch(fromActions.updateActivePlayer({ playerRole }));
   }
 
-  winnerPlayer$() {
-    //: Observable<Player>
-    // get winnerPlayer from the store
+  winnerPlayer$(): Observable<PlayerRole> {
+    return this.store.pipe(select(fromGame.winnerPlayerRole));
   }
 
-  endMatch(winnerPlayer: Player) {
-    // set state for ending the game/match
-    // set winnerPlayer to this game/match
+  endMatch(winnerPlayerRole: PlayerRole) {
+    this.store.dispatch(
+      fromActions.updateWinnerPlayer({ playerRole: winnerPlayerRole })
+    );
+    this.store.dispatch(fromActions.endMatch());
   }
 
-  players$() {
-    //: Observable<Players>
-    // get players from the game/Match (should be a length of 2)
+  players$(): Observable<PlayerRole[]> {
+    return this.store.pipe(select(fromGame.getPlayersArr));
   }
 
-  setMeAsPlayer2(name: string) {
-    const player: Player = {
-      id: this.storage.getPlayerTwoId(),
-      role: PlayerRole.Player2
-    };
-    const matchId = "someId"; // get matchID from store
-    this.storage.setPlayerTwo();
-
-    // set player2 to the game/match - players state
+  setPlayerTwo() {
+    if (!this.storage.getPlayerTwo()) {
+      this.storage.setPlayerTwo();
+    }
+    const secondPlayer = this.storage.getPlayerTwo();
+    this.store.dispatch(fromActions.setPlayerTwo({ playerTwo: secondPlayer }));
+    this.store.dispatch(
+      fromActions.setSecondPlayerToMatch({ playerRole: secondPlayer.role })
+    );
   }
 }

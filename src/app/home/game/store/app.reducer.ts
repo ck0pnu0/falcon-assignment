@@ -1,91 +1,83 @@
-import { Action, createReducer, on } from "@ngrx/store";
-// import { Match } from "../../../models/match.model";
+import { Action, createReducer, on, State } from "@ngrx/store";
 import * as matchActions from "./app.actions";
-import { PlayerRole } from "src/app/shared/enums/player-role.enum";
-import { MatchState } from "./app.state";
+import { AppState } from "./app.state";
+import { GameService } from "src/app/shared/services/game.service";
 
-const initialState: Match = {
-  id: null,
-  board: [],
+const initialState: AppState = {
+  matchId: null,
+  matchBoard: [],
   playerOne: null,
   playerTwo: null,
   activePlayer: null,
   winnerPlayer: null,
   players: [],
-  end: false
+  endMatch: false
 };
 
 const matchReducer = createReducer(
   initialState,
-  on(matchActions.startMatch, (state: MatchState, { matchId }) => ({
+  on(matchActions.startMatch, (state: AppState, { game }) => ({
     ...state,
-    matchId: matchId
+    matchId: game.matchId,
+    matchBoard: game.matchBoard,
+    playerOne: game.playerOne,
+    activePlayer: game.activePlayer,
+    players: game.players
   })),
-  on(matchActions.joinMatch, (state: MatchState, { matchId }) => ({
+  on(matchActions.joinMatch, (state: AppState, { id }) => ({
     ...state,
-    matchId: matchId
+    matchId: id
   })),
-  on(matchActions.setInitialBoard, (state: MatchState, { initialBoard }) => ({
+  on(matchActions.setInitialBoard, (state: AppState, { initialBoard }) => ({
     ...state,
     matchBoard: initialBoard
   })),
-  on(matchActions.selectBoardCell, (state: MatchState, { col, row }) => ({
+  on(matchActions.selectBoardCell, (state: AppState, { col, row }) => ({
     ...state,
     matchBoard: [col[row]]
   })),
-  on(
-    matchActions.endMatch,
-    (state: MatchState, { matchId, playerWin, matchEnd }) => ({
+  on(matchActions.endMatch, (state: AppState) => ({
+    ...state,
+    endMatch: true
+  })),
+  on(matchActions.setFirstPlayerToMatch, (state: AppState, { playerRole }) => {
+    const playersArr = state.players;
+    playersArr.push(playerRole);
+    return {
       ...state,
-      matchId: matchId,
-      winnerPlayer: playerWin,
-      endMatch: matchEnd
-    })
-  ),
-  on(
-    matchActions.setFirstPlayerToMatch,
-    (state: MatchState, { playerRole }) => {
-      const playersArr = state.players;
-      playersArr.push(playerRole);
-      return {
-        ...state,
-        players: playersArr
-      };
-    }
-  ),
-  on(
-    matchActions.setSecondPlayerToMatch,
-    (state: MatchState, { playerRole }) => {
-      const playersArr = state.players;
-      playersArr.push(playerRole);
-      return {
-        ...state,
-        players: playersArr
-      };
-    }
-  ),
-  on(matchActions.updateActivePlayer, (state: MatchState, { playerRole }) => ({
+      players: playersArr
+    };
+  }),
+  on(matchActions.setSecondPlayerToMatch, (state: AppState, { playerRole }) => {
+    const playersArr = state.players;
+    playersArr.push(playerRole);
+    return {
+      ...state,
+      players: playersArr
+    };
+  }),
+  on(matchActions.updateActivePlayer, (state: AppState, { playerRole }) => ({
     ...state,
     activePlayer: playerRole
   })),
-  on(matchActions.updateWinnerPlayer, (state: MatchState, { playerRole }) => ({
+  on(matchActions.updateWinnerPlayer, (state: AppState, { playerRole }) => ({
     ...state,
     winnerPlayer: playerRole
   })),
-  // on(matchActions.setPlayerRole, (state: MatchState, { playerRole }) => ({
+  // on(matchActions.setPlayerRole, (state: AppState, { playerRole }) => ({
   //   ...state,
   //   winnerPlayer: playerRole
   // })),
-  on(matchActions.setPlayerOne, (state: MatchState, { firstPlayer }) => ({
+  on(matchActions.setPlayerOne, (state: AppState, { playerOne }) => ({
     ...state,
-    playerOne: firstPlayer
+    playerOne
   })),
-  on(matchActions.setPlayerTwo, (state: MatchState, { secondPlayer }) => ({
+  on(matchActions.setPlayerTwo, (state: AppState, { playerTwo }) => ({
     ...state,
-    playerTwo: secondPlayer
+    playerTwo
   }))
 );
 
-export function reducer(state: Match | undefined, action: Action) {
+export function reducer(state: AppState | undefined, action: Action) {
   return matchReducer(state, action);
 }

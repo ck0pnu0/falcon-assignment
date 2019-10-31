@@ -2,26 +2,26 @@ import { Injectable } from "@angular/core";
 import { LocalStorageData } from "../../models/localStorage.model";
 import { Player } from "../../models/player.model";
 import { PlayerRole } from "../enums/player-role.enum";
+import { STORAGE_ID, DEFAULT_MATCH_ID } from "../global.variables";
 
 @Injectable()
 export class LocalStorageService {
-  private readonly STORAGE_ID = "gameChannel";
   constructor() {}
 
   init(): void {
     if (!this.get()) {
       const initialData: LocalStorageData = {
-        playerOne: undefined,
-        playerTwo: undefined,
-        matchId: undefined
+        playerOne: null,
+        playerTwo: null,
+        matchId: null
       };
 
-      localStorage.setItem(this.STORAGE_ID, JSON.stringify(initialData));
+      localStorage.setItem(STORAGE_ID, JSON.stringify(initialData));
     }
   }
 
   private get(): LocalStorageData {
-    const data = localStorage.getItem(this.STORAGE_ID);
+    const data = localStorage.getItem(STORAGE_ID);
     return JSON.parse(data) || null;
   }
 
@@ -31,28 +31,28 @@ export class LocalStorageService {
   }
 
   setMatchId(matchId: string) {
-    if (!this.getMatchId()) {
-      const existingData = localStorage.getItem(this.STORAGE_ID);
-      existingData["matchId"] = matchId;
-      localStorage.setItem(this.STORAGE_ID, JSON.stringify(existingData));
-    }
+    const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
+    existingData["matchId"] = matchId;
+    localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
   }
 
   getPlayerOne(): Player {
     const { playerOne } = this.get();
-    return playerOne;
+    if (playerOne != null) {
+      return playerOne;
+    }
+    return null;
   }
 
   setPlayerOne() {
     if (!this.getPlayerOne()) {
-      const existingData = localStorage.getItem(this.STORAGE_ID);
-
+      const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
       existingData["playerOne"] = {
         id: this.generateRandomUUID(),
         role: PlayerRole.Player1
       };
 
-      localStorage.setItem(this.STORAGE_ID, JSON.stringify(existingData));
+      localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
     }
   }
 
@@ -69,15 +69,15 @@ export class LocalStorageService {
   }
 
   setPlayerTwo() {
-    if (!this.getPlayerTwo() && this.getPlayerOne() != null) {
-      const existingData = localStorage.getItem(this.STORAGE_ID);
+    if (!this.getPlayerTwo()) {
+      const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
 
       existingData["playerTwo"] = {
         id: this.generateRandomUUID(),
         role: PlayerRole.Player2
       };
 
-      localStorage.setItem(this.STORAGE_ID, JSON.stringify(existingData));
+      localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
     }
   }
 
