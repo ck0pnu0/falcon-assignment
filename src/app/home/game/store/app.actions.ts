@@ -8,7 +8,7 @@ import { AppState } from "./app.state";
 export const startMatch = createAction(
   "[Match] Start Match",
   props<{ game: AppState }>()
-); // this will also create a new board (empty)
+);
 export const joinMatch = createAction(
   "[Match] Join Match",
   props<{ id: string }>()

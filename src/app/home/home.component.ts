@@ -8,13 +8,9 @@ import { LocalStorageService } from "../shared/services/local-storage.service";
   styleUrls: ["./home.component.scss"]
 })
 export class HomeComponent implements OnInit {
-  constructor(
-    private gameService: GameService,
-    private localStorageService: LocalStorageService
-  ) {}
+  constructor(private gameService: GameService) {}
 
   ngOnInit() {
-    this.localStorageService.init();
     this.gameService.getMatchState();
   }
 }
