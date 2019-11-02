@@ -4,49 +4,61 @@ import { Player } from "src/app/models/player.model";
 import { Matrix } from "src/app/lib/game-utilities/matrix";
 import { AppState } from "./app.state";
 
+export enum MatchActionTypes {
+  START_MATCH = "[Match] Start Match",
+  JOIN_MATCH = "[Match] Join Match",
+  SET_INITIAL_BOARD = "[Match] Set Initial Board",
+  SELECT_CELL = "[Match] Select Board Cell",
+  END_MATCH = "[Match] End Match and Update Winner Player",
+  FIRST_PLAYER_MATCH = "[Match] Set First Player to Match",
+  SECOND_PLAYER_MATCH = "[Match] Set Second Player to Match",
+  ACTIVE_PLAYER = "[Match Players] Update Active Player",
+  WINNER_PLAYER = "[Match Players] Update Winning Player",
+  PLAYER_ONE = "[Match Players] Set Player One",
+  PLAYER_TWO = "[Match Players] Set Player Two"
+}
+
 // Match
 export const startMatch = createAction(
-  "[Match] Start Match",
+  MatchActionTypes.START_MATCH,
   props<{ game: AppState }>()
 );
 export const joinMatch = createAction(
-  "[Match] Join Match",
+  MatchActionTypes.JOIN_MATCH,
   props<{ id: string }>()
 );
 export const setInitialBoard = createAction(
-  "[Match] Set Initial Board",
+  MatchActionTypes.SET_INITIAL_BOARD,
   props<{ initialBoard: Matrix }>()
 );
 export const selectBoardCell = createAction(
-  "[Match] Select Board Cell",
+  MatchActionTypes.SELECT_CELL,
   props<{ col: number; row: number }>()
 );
-export const endMatch = createAction(
-  "[Match] End Match and Update Winner Player"
-);
+export const endMatch = createAction(MatchActionTypes.END_MATCH);
 export const setFirstPlayerToMatch = createAction(
-  "[Match] Set First Player to Match",
+  MatchActionTypes.FIRST_PLAYER_MATCH,
   props<{ playerRole: PlayerRole }>()
 );
 export const setSecondPlayerToMatch = createAction(
-  "[Match] Set Second Player to Match",
+  MatchActionTypes.SECOND_PLAYER_MATCH,
   props<{ playerRole: PlayerRole }>()
 );
 
 // Players
 export const updateActivePlayer = createAction(
-  "[Match Players] Update Active Player",
+  MatchActionTypes.ACTIVE_PLAYER,
   props<{ playerRole: PlayerRole }>()
 );
 export const updateWinnerPlayer = createAction(
-  "[Match Players] Update Winning Player",
+  MatchActionTypes.WINNER_PLAYER,
   props<{ playerRole: PlayerRole }>()
 );
 export const setPlayerOne = createAction(
-  "[Match Players] Set Player One",
+  MatchActionTypes.PLAYER_ONE,
   props<{ playerOne: Player }>()
 );
 export const setPlayerTwo = createAction(
-  "[Match Players] Set Player Two",
+  MatchActionTypes.PLAYER_TWO,
   props<{ playerTwo: Player }>()
 );

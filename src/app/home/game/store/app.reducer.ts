@@ -1,7 +1,6 @@
-import { Action, createReducer, on, State } from "@ngrx/store";
+import { Action, createReducer, on } from "@ngrx/store";
 import * as matchActions from "./app.actions";
 import { AppState } from "./app.state";
-import { GameService } from "src/app/shared/services/game.service";
 
 const initialState: AppState = {
   matchId: null,
@@ -16,7 +15,7 @@ const initialState: AppState = {
 
 const matchReducer = createReducer(
   initialState,
-  on(matchActions.startMatch, (state: AppState, { game }) => ({
+  on(matchActions.startMatch, (state, { game }) => ({
     ...state,
     matchId: game.matchId,
     matchBoard: game.matchBoard,
@@ -24,23 +23,23 @@ const matchReducer = createReducer(
     activePlayer: game.activePlayer,
     players: game.players
   })),
-  on(matchActions.joinMatch, (state: AppState, { id }) => ({
+  on(matchActions.joinMatch, (state, { id }) => ({
     ...state,
     matchId: id
   })),
-  on(matchActions.setInitialBoard, (state: AppState, { initialBoard }) => ({
+  on(matchActions.setInitialBoard, (state, { initialBoard }) => ({
     ...state,
     matchBoard: initialBoard
   })),
-  on(matchActions.selectBoardCell, (state: AppState, { col, row }) => ({
+  on(matchActions.selectBoardCell, (state, { col, row }) => ({
     ...state,
     matchBoard: [col[row]]
   })),
-  on(matchActions.endMatch, (state: AppState) => ({
+  on(matchActions.endMatch, state => ({
     ...state,
     endMatch: true
   })),
-  on(matchActions.setFirstPlayerToMatch, (state: AppState, { playerRole }) => {
+  on(matchActions.setFirstPlayerToMatch, (state, { playerRole }) => {
     const playersArr = state.players;
     playersArr.push(playerRole);
     return {
@@ -48,7 +47,7 @@ const matchReducer = createReducer(
       players: playersArr
     };
   }),
-  on(matchActions.setSecondPlayerToMatch, (state: AppState, { playerRole }) => {
+  on(matchActions.setSecondPlayerToMatch, (state, { playerRole }) => {
     const playersArr = state.players;
     playersArr.push(playerRole);
     return {
@@ -56,28 +55,31 @@ const matchReducer = createReducer(
       players: playersArr
     };
   }),
-  on(matchActions.updateActivePlayer, (state: AppState, { playerRole }) => ({
+  on(matchActions.updateActivePlayer, (state, { playerRole }) => ({
     ...state,
     activePlayer: playerRole
   })),
-  on(matchActions.updateWinnerPlayer, (state: AppState, { playerRole }) => ({
+  on(matchActions.updateWinnerPlayer, (state, { playerRole }) => ({
     ...state,
     winnerPlayer: playerRole
   })),
-  // on(matchActions.setPlayerRole, (state: AppState, { playerRole }) => ({
+  // on(matchActions.setPlayerRole, (state, { playerRole }) => ({
   //   ...state,
   //   winnerPlayer: playerRole
   // })),
-  on(matchActions.setPlayerOne, (state: AppState, { playerOne }) => ({
+  on(matchActions.setPlayerOne, (state, { playerOne }) => ({
     ...state,
     playerOne
   })),
-  on(matchActions.setPlayerTwo, (state: AppState, { playerTwo }) => ({
+  on(matchActions.setPlayerTwo, (state, { playerTwo }) => ({
     ...state,
     playerTwo
   }))
 );
 
-export function reducer(state: AppState | undefined, action: Action) {
+export function reducer(
+  state: AppState = initialState,
+  action: Action
+) {
   return matchReducer(state, action);
 }

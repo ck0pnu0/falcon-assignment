@@ -6,6 +6,8 @@ import { PlayersComponent } from "./game/players/players.component";
 import { BoardComponent } from "./game/board/board.component";
 import { GameService } from "../shared/services/game.service";
 import { LocalStorageService } from "../shared/services/local-storage.service";
+import { StoreModule } from "@ngrx/store";
+import { reducer } from "./game/store/app.reducer";
 
 @NgModule({
   declarations: [
@@ -14,7 +16,7 @@ import { LocalStorageService } from "../shared/services/local-storage.service";
     PlayersComponent,
     BoardComponent
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, StoreModule.forFeature("game", reducer)],
   providers: [GameService, LocalStorageService]
 })
 export class HomeModule {}

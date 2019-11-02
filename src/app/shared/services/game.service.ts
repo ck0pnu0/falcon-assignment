@@ -57,10 +57,7 @@ export class GameService {
   }
 
   getMatchId(): Observable<string> {
-    return this.store.pipe(
-      select(fromGame.getMatchId)
-      // map(id => (this.matchId = id))
-    );
+    return this.store.pipe(select(fromGame.getMatchId));
   }
 
   isMatchExists(): boolean {

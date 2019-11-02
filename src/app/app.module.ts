@@ -6,7 +6,6 @@ import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { FooterComponent } from "./footer/footer.component";
-import { reducer } from "./home/game/store/app.reducer";
 import { HomeModule } from "./home/home.module";
 
 @NgModule({
@@ -15,7 +14,7 @@ import { HomeModule } from "./home/home.module";
     BrowserModule,
     AppRoutingModule,
     HomeModule,
-    StoreModule.forRoot({ game: reducer }),
+    StoreModule.forRoot({}),
     StoreDevtoolsModule.instrument({
       maxAge: 25
     }),

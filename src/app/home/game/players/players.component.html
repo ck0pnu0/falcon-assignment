@@ -13,17 +13,15 @@
   </span>
 </div>
 <div class="mdl-card__actions mdl-card--border">
-  <!-- *ngIf="" -->
-  {{ matchId }}
   <button
-    *ngIf="!matchId"
+    *ngIf="!(matchId$ | async)"
     (click)="onGameStart()"
     class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect"
   >
     Start game
   </button>
   <button
-    *ngIf="matchId"
+    *ngIf="matchId$ | async"
     class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect"
   >
     <!-- onclick="alert('TODO: Implement Join Game route')" -->
