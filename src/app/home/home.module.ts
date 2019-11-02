@@ -8,6 +8,7 @@ import { GameService } from "../shared/services/game.service";
 import { LocalStorageService } from "../shared/services/local-storage.service";
 import { StoreModule } from "@ngrx/store";
 import { reducer } from "./game/store/app.reducer";
+import { APP_KEY } from "./game/store/app.selectors";
 
 @NgModule({
   declarations: [
@@ -16,7 +17,7 @@ import { reducer } from "./game/store/app.reducer";
     PlayersComponent,
     BoardComponent
   ],
-  imports: [CommonModule, StoreModule.forFeature("game", reducer)],
+  imports: [CommonModule, StoreModule.forFeature(APP_KEY, reducer)],
   providers: [GameService, LocalStorageService]
 })
 export class HomeModule {}
