@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { select, Store } from "@ngrx/store";
-import { Observable, BehaviorSubject } from "rxjs";
+import { Observable } from "rxjs";
 import { AppState } from "src/app/home/game/store/app.state";
 import * as fromActions from "../../home/game/store/app.actions";
 import * as fromGame from "../../home/game/store/app.selectors";
@@ -19,7 +19,7 @@ export class GameService {
     private store: Store<AppState>
   ) {}
 
-  public getMatchState() {
+  public initState() {
     this.localStorageService.init();
     return this.store.pipe(select("game"));
   }
@@ -52,6 +52,10 @@ export class GameService {
     return generateMatrixModel(7, 6);
   }
 
+  updateBoard(newBoard: Matrix) {
+    this.store.dispatch(fromActions.selectBoardCell({ newBoard }));
+  }
+
   getMatchId(): Observable<string> {
     return this.store.pipe(select(fromGame.getMatchId));
   }
@@ -81,11 +85,16 @@ export class GameService {
       this.localStorageService.setPlayerTwo();
     }
     const secondPlayer = this.localStorageService.getPlayerTwo();
+
     this.store.dispatch(fromActions.setPlayerTwo({ playerTwo: secondPlayer }));
-    this.store.dispatch(
-      fromActions.setSecondPlayerToMatch({ playerRole: secondPlayer.role })
-    );
+    this.setPlayerTwoToMatch(secondPlayer);
     this.setActivePlayer(PlayerRole.Player1);
+  }
+
+  setPlayerTwoToMatch(player: Player) {
+    this.store.dispatch(
+      fromActions.setSecondPlayerToMatch({ playerRole: player.role })
+    );
   }
 
   getPlayerTwo(): Observable<Player> {
@@ -108,11 +117,11 @@ export class GameService {
     return this.store.pipe(select(fromGame.activePlayerRole));
   }
 
-  players(): Observable<PlayerRole[]> {
+  getPlayers(): Observable<PlayerRole[]> {
     return this.store.pipe(select(fromGame.getPlayersArr));
   }
 
-  board(): Observable<Matrix> {
+  getBoard(): Observable<Matrix> {
     return this.store.pipe(select(fromGame.getMatchBoard));
   }
 }

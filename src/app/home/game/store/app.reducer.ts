@@ -20,7 +20,6 @@ const matchReducer = createReducer(
     matchId: game.matchId,
     matchBoard: game.matchBoard,
     playerOne: game.playerOne,
-    // activePlayer: game.activePlayer,
     players: game.players
   })),
   on(matchActions.joinMatch, (state, { id }) => ({
@@ -31,9 +30,9 @@ const matchReducer = createReducer(
     ...state,
     matchBoard: initialBoard
   })),
-  on(matchActions.selectBoardCell, (state, { col, row }) => ({
+  on(matchActions.selectBoardCell, (state, { newBoard }) => ({
     ...state,
-    matchBoard: [col[row]]
+    matchBoard: newBoard
   })),
   on(matchActions.endMatch, (state, { matchEnded }) => ({
     ...state,

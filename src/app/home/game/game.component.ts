@@ -3,6 +3,7 @@ import { GameService } from "src/app/shared/services/game.service";
 import { Observable } from "rxjs";
 import { Player } from "src/app/models/player.model";
 import { PlayerRole } from "src/app/shared/enums/player-role.enum";
+import { Matrix } from "src/app/lib/game-utilities/matrix";
 
 @Component({
   selector: "app-game",
@@ -15,15 +16,19 @@ export class GameComponent implements OnInit {
   public playerTwo$: Observable<Player>;
   public activePlayer$: Observable<PlayerRole>;
   public winnerPlayer$: Observable<PlayerRole>;
+  public board$: Observable<Matrix>;
+  public players$: Observable<PlayerRole[]>;
 
   constructor(private gameService: GameService) {}
 
   ngOnInit() {
-    this.gameService.getMatchState();
+    this.gameService.initState();
     this.matchId$ = this.gameService.getMatchId();
     this.playerOne$ = this.gameService.getPlayerOne();
     this.playerTwo$ = this.gameService.getPlayerTwo();
     this.activePlayer$ = this.gameService.getActivePlayer();
     this.winnerPlayer$ = this.gameService.getWinnerPlayer();
+    this.board$ = this.gameService.getBoard();
+    this.players$ = this.gameService.getPlayers();
   }
 }

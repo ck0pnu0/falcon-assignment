@@ -34,7 +34,7 @@ export const setInitialBoard = createAction(
 );
 export const selectBoardCell = createAction(
   MatchActionTypes.SELECT_CELL,
-  props<{ col: number; row: number }>()
+  props<{ newBoard: Matrix }>()
 );
 export const endMatch = createAction(
   MatchActionTypes.END_MATCH,
