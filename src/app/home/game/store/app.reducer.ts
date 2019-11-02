@@ -20,7 +20,7 @@ const matchReducer = createReducer(
     matchId: game.matchId,
     matchBoard: game.matchBoard,
     playerOne: game.playerOne,
-    activePlayer: game.activePlayer,
+    // activePlayer: game.activePlayer,
     players: game.players
   })),
   on(matchActions.joinMatch, (state, { id }) => ({

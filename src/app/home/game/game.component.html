@@ -3,6 +3,12 @@
     <app-board></app-board>
   </div>
   <div class="mdl-card mdl-shadow--2dp flc-card-aside">
-    <app-players></app-players>
+    <app-players
+      [matchId]="matchId$ | async"
+      [playerOne]="playerOne$ | async"
+      [playerTwo]="playerTwo$ | async"
+      [activePlayer]="activePlayer$ | async"
+      [winnerPlayer]="winnerPlayer$ | async"
+    ></app-players>
   </div>
 </div>

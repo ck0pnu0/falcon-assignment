@@ -22,7 +22,7 @@ export enum MatchActionTypes {
 // Match
 export const startMatch = createAction(
   MatchActionTypes.START_MATCH,
-  props<{ game: AppState }>()
+  props<{ game: Partial<AppState> }>()
 );
 export const joinMatch = createAction(
   MatchActionTypes.JOIN_MATCH,

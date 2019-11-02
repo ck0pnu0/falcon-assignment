@@ -37,15 +37,11 @@ export class GameService {
     const id = this.localStorageService.getMatchId();
     const firstPlayer = this.localStorageService.getPlayerOne();
 
-    const startGameState: AppState = {
+    const startGameState: Partial<AppState> = {
       matchId: id,
       matchBoard: board,
       playerOne: firstPlayer,
-      playerTwo: null,
-      activePlayer: firstPlayerRole,
-      winnerPlayer: null,
-      players: [firstPlayerRole],
-      endMatch: false
+      players: [firstPlayerRole]
     };
 
     // Store update
@@ -60,19 +56,24 @@ export class GameService {
     return this.store.pipe(select(fromGame.getMatchId));
   }
 
-  isMatchExists(): boolean {
-    if (this.matchId != null) {
-      return true;
-    }
-    return false;
-  }
-
   setActivePlayer(playerRole: PlayerRole) {
     this.store.dispatch(fromActions.updateActivePlayer({ playerRole }));
   }
 
-  winnerPlayer(): Observable<PlayerRole> {
+  getActivePlayer(): Observable<PlayerRole> {
+    return this.store.pipe(select(fromGame.activePlayerRole));
+  }
+
+  setWinnerPlayer(playerRole: PlayerRole) {
+    this.store.dispatch(fromActions.updateWinnerPlayer({ playerRole }));
+  }
+
+  getWinnerPlayer(): Observable<PlayerRole> {
     return this.store.pipe(select(fromGame.winnerPlayerRole));
+  }
+
+  getPlayerOne(): Observable<Player> {
+    return this.store.pipe(select(fromGame.getPlayerOne));
   }
 
   setPlayerTwo() {
@@ -84,6 +85,7 @@ export class GameService {
     this.store.dispatch(
       fromActions.setSecondPlayerToMatch({ playerRole: secondPlayer.role })
     );
+    this.setActivePlayer(PlayerRole.Player1);
   }
 
   getPlayerTwo(): Observable<Player> {

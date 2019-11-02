@@ -1,6 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { GameService } from "../../../shared/services/game.service";
-import { Observable } from "rxjs";
 import { PlayerRole } from "src/app/shared/enums/player-role.enum";
 import { Player } from "src/app/models/player.model";
 
@@ -10,17 +9,18 @@ import { Player } from "src/app/models/player.model";
   styleUrls: ["./players.component.scss"]
 })
 export class PlayersComponent implements OnInit {
-  public matchId$: Observable<string>;
-  public playerTwo$: Observable<Player>;
+  public playerOneRole = PlayerRole.Player1;
+  public playerTwoRole = PlayerRole.Player2;
 
-  constructor(
-    private gameService: GameService // private dispatcher: ReducerManagerDispatcher
-  ) {}
+  @Input() matchId: string = null;
+  @Input() playerOne: Player = null;
+  @Input() playerTwo: Player = null;
+  @Input() activePlayer: PlayerRole = null;
+  @Input() winnerPlayer: PlayerRole = null;
 
-  ngOnInit() {
-    this.matchId$ = this.gameService.getMatchId();
-    this.playerTwo$ = this.gameService.getPlayerTwo();
-  }
+  constructor(private gameService: GameService) {}
+
+  ngOnInit() {}
 
   onGameStart() {
     this.gameService.createMatch();
