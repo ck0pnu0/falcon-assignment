@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { GameService } from "../../../shared/services/game.service";
 import { Observable } from "rxjs";
+import { PlayerRole } from "src/app/shared/enums/player-role.enum";
+import { Player } from "src/app/models/player.model";
 
 @Component({
   selector: "app-players",
@@ -9,7 +11,7 @@ import { Observable } from "rxjs";
 })
 export class PlayersComponent implements OnInit {
   public matchId$: Observable<string>;
-  public isMatchExists: boolean;
+  public playerTwo$: Observable<Player>;
 
   constructor(
     private gameService: GameService // private dispatcher: ReducerManagerDispatcher
@@ -17,9 +19,18 @@ export class PlayersComponent implements OnInit {
 
   ngOnInit() {
     this.matchId$ = this.gameService.getMatchId();
+    this.playerTwo$ = this.gameService.getPlayerTwo();
   }
 
   onGameStart() {
     this.gameService.createMatch();
+  }
+
+  onGameJoin() {
+    this.gameService.setPlayerTwo();
+  }
+
+  onGameEnd() {
+    this.gameService.leaveMatch();
   }
 }

@@ -98,4 +98,12 @@ export class LocalStorageService {
         .substring(2, 15)
     );
   }
+
+  reset() {
+    const resetExistingData = JSON.parse(localStorage.getItem(STORAGE_ID));
+    resetExistingData["matchId"] = null;
+    resetExistingData["playerOne"] = null;
+    resetExistingData["playerTwo"] = null;
+    localStorage.setItem(STORAGE_ID, JSON.stringify(resetExistingData));
+  }
 }

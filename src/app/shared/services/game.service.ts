@@ -8,7 +8,7 @@ import { generateMatrixModel, Matrix } from "../../lib/game-utilities/matrix";
 import { PlayerRole } from "../enums/player-role.enum";
 import { DEFAULT_MATCH_ID } from "../global.variables";
 import { LocalStorageService } from "./local-storage.service";
-import { map } from "rxjs/operators";
+import { Player } from "src/app/models/player.model";
 
 @Injectable()
 export class GameService {
@@ -71,7 +71,7 @@ export class GameService {
     this.store.dispatch(fromActions.updateActivePlayer({ playerRole }));
   }
 
-  winnerPlayer$(): Observable<PlayerRole> {
+  winnerPlayer(): Observable<PlayerRole> {
     return this.store.pipe(select(fromGame.winnerPlayerRole));
   }
 
@@ -86,22 +86,31 @@ export class GameService {
     );
   }
 
+  getPlayerTwo(): Observable<Player> {
+    return this.store.pipe(select(fromGame.getPlayerTwo));
+  }
+
   endMatch(winnerPlayerRole: PlayerRole) {
     this.store.dispatch(
       fromActions.updateWinnerPlayer({ playerRole: winnerPlayerRole })
     );
-    this.store.dispatch(fromActions.endMatch());
+    this.store.dispatch(fromActions.endMatch({ matchEnded: true }));
   }
 
-  activePlayer$(): Observable<PlayerRole> {
+  leaveMatch() {
+    this.store.dispatch(fromActions.leaveMatch());
+    this.localStorageService.reset();
+  }
+
+  activePlayer(): Observable<PlayerRole> {
     return this.store.pipe(select(fromGame.activePlayerRole));
   }
 
-  players$(): Observable<PlayerRole[]> {
+  players(): Observable<PlayerRole[]> {
     return this.store.pipe(select(fromGame.getPlayersArr));
   }
 
-  board$(): Observable<Matrix> {
+  board(): Observable<Matrix> {
     return this.store.pipe(select(fromGame.getMatchBoard));
   }
 }

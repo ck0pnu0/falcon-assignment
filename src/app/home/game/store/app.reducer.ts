@@ -35,10 +35,11 @@ const matchReducer = createReducer(
     ...state,
     matchBoard: [col[row]]
   })),
-  on(matchActions.endMatch, state => ({
+  on(matchActions.endMatch, (state, { matchEnded }) => ({
     ...state,
-    endMatch: true
+    endMatch: matchEnded
   })),
+  on(matchActions.leaveMatch, state => initialState),
   on(matchActions.setFirstPlayerToMatch, (state, { playerRole }) => {
     const playersArr = state.players;
     playersArr.push(playerRole);
@@ -77,9 +78,6 @@ const matchReducer = createReducer(
   }))
 );
 
-export function reducer(
-  state: AppState = initialState,
-  action: Action
-) {
+export function reducer(state: AppState = initialState, action: Action) {
   return matchReducer(state, action);
 }

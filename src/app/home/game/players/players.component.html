@@ -21,10 +21,17 @@
     Start game
   </button>
   <button
-    *ngIf="matchId$ | async"
+    *ngIf="(matchId$ | async) && !(playerTwo$ | async)"
     class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect"
+    (click)="onGameJoin()"
   >
-    <!-- onclick="alert('TODO: Implement Join Game route')" -->
     Join game
+  </button>
+  <button
+    *ngIf="(playerTwo$ | async) && (matchId$ | async)"
+    class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect"
+    (click)="onGameEnd()"
+  >
+    End/Leave game
   </button>
 </div>
