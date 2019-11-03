@@ -3,30 +3,42 @@ import { LocalStorageData } from "../../models/localStorage.model";
 import { Player } from "../../models/player.model";
 import { PlayerRole } from "../enums/player-role.enum";
 import { STORAGE_ID, DEFAULT_MATCH_ID } from "../global.variables";
+import { Matrix } from "src/app/lib/game-utilities/matrix";
+import { AppState } from "src/app/home/game/store/app.state";
 
 @Injectable()
 export class LocalStorageService {
   constructor() {}
 
   init(): void {
-    if (!this.get()) {
+    if (!this.getGameData()) {
       const initialData: LocalStorageData = {
+        matchId: null,
+        matchBoard: [],
         playerOne: null,
         playerTwo: null,
-        matchId: null
+        activePlayer: null,
+        winnerPlayer: null,
+        players: [],
+        endMatch: false
       };
 
       localStorage.setItem(STORAGE_ID, JSON.stringify(initialData));
     }
   }
 
-  private get(): LocalStorageData {
+  get(): AppState {
+    const data = localStorage.getItem(STORAGE_ID);
+    return JSON.parse(data) || null;
+  }
+
+  getGameData(): LocalStorageData {
     const data = localStorage.getItem(STORAGE_ID);
     return JSON.parse(data) || null;
   }
 
   getMatchId(): string {
-    const { matchId } = this.get();
+    const { matchId } = this.getGameData();
     return matchId;
   }
 
@@ -37,7 +49,7 @@ export class LocalStorageService {
   }
 
   getPlayerOne(): Player {
-    const { playerOne } = this.get();
+    const { playerOne } = this.getGameData();
     if (playerOne != null) {
       return playerOne;
     }
@@ -64,7 +76,7 @@ export class LocalStorageService {
   }
 
   getPlayerTwo(): Player {
-    const { playerTwo } = this.get();
+    const { playerTwo } = this.getGameData();
     return playerTwo;
   }
 
@@ -88,6 +100,55 @@ export class LocalStorageService {
     return this.getPlayerTwo().id;
   }
 
+  setMatchBoard(board: Matrix) {
+    const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
+
+    existingData["matchBoard"] = board;
+
+    localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
+  }
+
+  setActivePlayer(activePlayerRole: PlayerRole) {
+    const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
+
+    existingData["activePlayer"] = activePlayerRole;
+
+    localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
+  }
+
+  getActivePlayer() {
+    const { activePlayer } = this.getGameData();
+    if (activePlayer != null) {
+      return activePlayer;
+    }
+    return null;
+  }
+
+  setWinnerPlayer(winnerPlayer: PlayerRole) {
+    const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
+
+    existingData["winnerPlayer"] = winnerPlayer;
+
+    localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
+  }
+
+  setPlayerInGame(player: Player) {
+    const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
+    const players = [...existingData["players"]];
+    players.push(player);
+    existingData["players"] = players;
+
+    localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
+  }
+
+  setEndMatch(status: boolean) {
+    const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
+
+    existingData["endMatch"] = status;
+
+    localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
+  }
+
   generateRandomUUID() {
     return (
       Math.random()
@@ -104,6 +165,11 @@ export class LocalStorageService {
     resetExistingData["matchId"] = null;
     resetExistingData["playerOne"] = null;
     resetExistingData["playerTwo"] = null;
+    resetExistingData["matchBoard"] = [];
+    resetExistingData["activePlayer"] = null;
+    resetExistingData["winnerPlayer"] = null;
+    resetExistingData["players"] = [];
+    resetExistingData["endMatch"] = false;
     localStorage.setItem(STORAGE_ID, JSON.stringify(resetExistingData));
   }
 }

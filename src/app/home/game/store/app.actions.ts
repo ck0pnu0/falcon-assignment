@@ -16,7 +16,8 @@ export enum MatchActionTypes {
   ACTIVE_PLAYER = "[Match Players] Update Active Player",
   WINNER_PLAYER = "[Match Players] Update Winning Player",
   PLAYER_ONE = "[Match Players] Set Player One",
-  PLAYER_TWO = "[Match Players] Set Player Two"
+  PLAYER_TWO = "[Match Players] Set Player Two",
+  SET_DATA_FROM_LOCAL_STORAGE = "[Match] Set Game data from Local Storage"
 }
 
 // Match
@@ -66,4 +67,8 @@ export const setPlayerOne = createAction(
 export const setPlayerTwo = createAction(
   MatchActionTypes.PLAYER_TWO,
   props<{ playerTwo: Player }>()
+);
+export const setGameStateFromLocalStorage = createAction(
+  MatchActionTypes.SET_DATA_FROM_LOCAL_STORAGE,
+  props<{ game: AppState }>()
 );

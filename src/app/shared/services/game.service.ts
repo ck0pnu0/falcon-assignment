@@ -12,8 +12,6 @@ import { Player } from "src/app/models/player.model";
 
 @Injectable()
 export class GameService {
-  private matchId: string;
-
   constructor(
     private localStorageService: LocalStorageService,
     private store: Store<AppState>
@@ -22,6 +20,13 @@ export class GameService {
   public initState() {
     this.localStorageService.init();
     return this.store.pipe(select("game"));
+  }
+
+  public onRefreshState() {
+    const gameState = this.localStorageService.get();
+    this.store.dispatch(
+      fromActions.setGameStateFromLocalStorage({ game: gameState })
+    );
   }
 
   createMatch() {
@@ -44,16 +49,22 @@ export class GameService {
       players: [firstPlayerRole]
     };
 
+    // Set first player to the localStorage player in game
+    this.localStorageService.setPlayerInGame(firstPlayer);
+
     // Store update
     this.store.dispatch(fromActions.startMatch({ game: startGameState }));
   }
 
   setBoard(): Matrix {
-    return generateMatrixModel(7, 6);
+    const initiateBoard = generateMatrixModel(7, 6);
+    this.localStorageService.setMatchBoard(initiateBoard);
+    return initiateBoard;
   }
 
   updateBoard(newBoard: Matrix) {
     this.store.dispatch(fromActions.selectBoardCell({ newBoard }));
+    this.localStorageService.setMatchBoard(newBoard);
   }
 
   getMatchId(): Observable<string> {
@@ -62,22 +73,16 @@ export class GameService {
 
   setActivePlayer(playerRole: PlayerRole) {
     this.store.dispatch(fromActions.updateActivePlayer({ playerRole }));
+    this.localStorageService.setActivePlayer(playerRole);
   }
 
   getActivePlayerRole(): Observable<PlayerRole> {
     return this.store.pipe(select(fromGame.activePlayerRole));
   }
 
-  getActivePlayer(playerRole: PlayerRole) {
-    if (playerRole === PlayerRole.Player1) {
-      return this.store.pipe(select(fromGame.getPlayerOne));
-    } else {
-      return this.store.pipe(select(fromGame.getPlayerTwo));
-    }
-  }
-
   setWinnerPlayer(playerRole: PlayerRole) {
     this.store.dispatch(fromActions.updateWinnerPlayer({ playerRole }));
+    this.localStorageService.setWinnerPlayer(playerRole);
   }
 
   getWinnerPlayer(): Observable<PlayerRole> {
@@ -103,6 +108,7 @@ export class GameService {
     this.store.dispatch(
       fromActions.setSecondPlayerToMatch({ playerRole: player.role })
     );
+    this.localStorageService.setPlayerInGame(player);
   }
 
   getPlayerTwo(): Observable<Player> {

@@ -63,10 +63,6 @@ const matchReducer = createReducer(
     ...state,
     winnerPlayer: playerRole
   })),
-  // on(matchActions.setPlayerRole, (state, { playerRole }) => ({
-  //   ...state,
-  //   winnerPlayer: playerRole
-  // })),
   on(matchActions.setPlayerOne, (state, { playerOne }) => ({
     ...state,
     playerOne
@@ -74,6 +70,17 @@ const matchReducer = createReducer(
   on(matchActions.setPlayerTwo, (state, { playerTwo }) => ({
     ...state,
     playerTwo
+  })),
+  on(matchActions.setGameStateFromLocalStorage, (state, { game }) => ({
+    ...state,
+    matchId: game.matchId,
+    matchBoard: game.matchBoard,
+    playerOne: game.playerOne,
+    playerTwo: game.playerTwo,
+    activePlayer: game.activePlayer,
+    winnerPlayer: game.winnerPlayer,
+    players: game.players,
+    endMatch: game.endMatch
   }))
 );
 
