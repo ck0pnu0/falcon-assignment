@@ -1,21 +1,22 @@
 <div class="flc-layout--center" style="padding: 50px 0;">
   <div class="flc-game-board">
-    <!-- *ngIf="players.length === inGamePlayers" -->
-    <div
-      class="board-col"
-      *ngFor="let col of board; let c = index"
-      (click)="onClickCell(c)"
-    >
-      <div class="row-holder" *ngFor="let row of board[c]; let r = index">
-        <span
-          class="flc-game-piece"
-          *ngIf="row != 0"
-          [ngClass]="{
-            'player-one': row == playerOneRole,
-            'player-two': row == playerTwoRole,
-            winner: row == isWinner
-          }"
-        ></span>
+    <div class="board-cols" *ngIf="players.length === inGamePlayers">
+      <div
+        class="board-col"
+        *ngFor="let col of board; let c = index"
+        (click)="onClickCell(c)"
+      >
+        <div class="row-holder" *ngFor="let row of board[c]; let r = index">
+          <span
+            class="flc-game-piece"
+            *ngIf="row != 0"
+            [ngClass]="{
+              'player-one': row == playerOneRole,
+              'player-two': row == playerTwoRole,
+              winner: row == isWinner
+            }"
+          ></span>
+        </div>
       </div>
     </div>
   </div>

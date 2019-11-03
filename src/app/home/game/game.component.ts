@@ -26,7 +26,7 @@ export class GameComponent implements OnInit {
     this.matchId$ = this.gameService.getMatchId();
     this.playerOne$ = this.gameService.getPlayerOne();
     this.playerTwo$ = this.gameService.getPlayerTwo();
-    this.activePlayer$ = this.gameService.getActivePlayer();
+    this.activePlayer$ = this.gameService.getActivePlayerRole();
     this.winnerPlayer$ = this.gameService.getWinnerPlayer();
     this.board$ = this.gameService.getBoard();
     this.players$ = this.gameService.getPlayers();

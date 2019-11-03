@@ -1,11 +1,14 @@
 import {
+  createFeatureSelector,
   createSelector,
-  MemoizedSelector,
-  createFeatureSelector
+  MemoizedSelector
 } from "@ngrx/store";
 import { AppState } from "./app.state";
 
 export const APP_KEY = "game";
+export const PLAYER_ONE = "playerOne";
+export const PLAYER_TWO = "playerTwo";
+
 const getAppState: MemoizedSelector<object, AppState> = createFeatureSelector<
   AppState
 >(APP_KEY);
@@ -29,6 +32,7 @@ export const getPlayerOne = createSelector(
   getAppState,
   (state: AppState) => state.playerOne
 );
+
 export const getPlayerTwo = createSelector(
   getAppState,
   (state: AppState) => state.playerTwo

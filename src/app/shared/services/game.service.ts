@@ -64,8 +64,16 @@ export class GameService {
     this.store.dispatch(fromActions.updateActivePlayer({ playerRole }));
   }
 
-  getActivePlayer(): Observable<PlayerRole> {
+  getActivePlayerRole(): Observable<PlayerRole> {
     return this.store.pipe(select(fromGame.activePlayerRole));
+  }
+
+  getActivePlayer(playerRole: PlayerRole) {
+    if (playerRole === PlayerRole.Player1) {
+      return this.store.pipe(select(fromGame.getPlayerOne));
+    } else {
+      return this.store.pipe(select(fromGame.getPlayerTwo));
+    }
   }
 
   setWinnerPlayer(playerRole: PlayerRole) {
