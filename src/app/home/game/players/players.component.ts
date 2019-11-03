@@ -9,9 +9,6 @@ import { Player } from "src/app/models/player.model";
   styleUrls: ["./players.component.scss"]
 })
 export class PlayersComponent implements OnInit {
-  public playerOneRole = PlayerRole.Player1;
-  public playerTwoRole = PlayerRole.Player2;
-
   @Input() matchId: string = null;
   @Input() playerOne: Player = null;
   @Input() playerTwo: Player = null;

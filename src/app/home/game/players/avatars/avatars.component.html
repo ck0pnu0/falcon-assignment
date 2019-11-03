@@ -1,0 +1,52 @@
+<div class="flc-game-avatar-group">
+  <span
+    class="flc-game-avatar woman"
+    [ngClass]="{
+      'player-one': playerOne,
+      'their-turn': activePlayer === playerOneRole,
+      winner: winnerPlayer === playerOneRole
+    }"
+  ></span>
+  <span>
+    Player one <br />
+    <i class="mdl-typography--caption-color-contrast" *ngIf="!matchId"
+      >(waiting to start a game)</i
+    >
+    <i
+      class="mdl-typography--caption-color-contrast"
+      *ngIf="activePlayer === playerOneRole && !winnerPlayer"
+      >(you)</i
+    >
+    <i
+      class="mdl-typography--caption-color-contrast"
+      *ngIf="winnerPlayer === playerOneRole"
+      >WINNER</i
+    >
+  </span>
+</div>
+<div class="flc-game-avatar-group">
+  <span
+    class="flc-game-avatar man"
+    [ngClass]="{
+      'player-two': playerTwo,
+      'their-turn': activePlayer === playerTwoRole,
+      winner: winnerPlayer === playerTwoRole
+    }"
+  ></span>
+  <span>
+    Player two <br />
+    <i class="mdl-typography--caption-color-contrast" *ngIf="!playerTwo"
+      >(waiting to join)</i
+    >
+    <i
+      class="mdl-typography--caption-color-contrast"
+      *ngIf="activePlayer === playerTwoRole && !winnerPlayer"
+      >(you)</i
+    >
+    <i
+      class="mdl-typography--caption-color-contrast"
+      *ngIf="winnerPlayer === playerTwoRole"
+      >WINNER</i
+    >
+  </span>
+</div>

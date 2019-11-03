@@ -123,8 +123,8 @@ export class GameService {
   }
 
   leaveMatch() {
-    this.store.dispatch(fromActions.leaveMatch());
     this.localStorageService.reset();
+    this.store.dispatch(fromActions.leaveMatch());
   }
 
   activePlayer(): Observable<PlayerRole> {

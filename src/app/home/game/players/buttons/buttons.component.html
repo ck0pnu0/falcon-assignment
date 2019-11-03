@@ -1,0 +1,22 @@
+<div class="mdl-card__actions mdl-card--border">
+  <button
+    *ngIf="!matchId"
+    (click)="gameStart()"
+    class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect"
+  >
+    Start game
+  </button>
+  <button
+    *ngIf="matchId && !playerTwo"
+    class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect"
+    (click)="gameJoin()"
+  >
+    Join game
+  </button>
+  <button
+    *ngIf="playerTwo && matchId"
+    class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect"
+    (click)="gameEnd()"
+    [innerText]="winnerPlayer ? 'New game' : 'End/Leave game'"
+  ></button>
+</div>

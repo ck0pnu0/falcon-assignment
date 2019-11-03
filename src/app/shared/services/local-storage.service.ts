@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { LocalStorageData } from "../../models/localStorage.model";
 import { Player } from "../../models/player.model";
 import { PlayerRole } from "../enums/player-role.enum";
-import { STORAGE_ID, DEFAULT_MATCH_ID } from "../global.variables";
+import { STORAGE_ID } from "../global.variables";
 import { Matrix } from "src/app/lib/game-utilities/matrix";
 import { AppState } from "src/app/home/game/store/app.state";
 
