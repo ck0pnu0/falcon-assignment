@@ -9,7 +9,6 @@ import { PlayerRole } from "../enums/player-role.enum";
 import { DEFAULT_MATCH_ID } from "../global.variables";
 import { LocalStorageService } from "./local-storage.service";
 import { Player } from "src/app/models/player.model";
-import { initialState } from "src/app/home/game/store/app.reducer";
 
 @Injectable()
 export class GameService {

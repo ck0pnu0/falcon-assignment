@@ -53,13 +53,10 @@ export class BoardComponent implements OnInit {
     // );
     // console.log(isWinningTheGame instanceof WinningMove);
 
-    // check if active player winning the game
+    // check if active player is winning the game
     this.playerRoleWinningTheGame = getWinnerValue(this.board);
     if (this.playerRoleWinningTheGame != null) {
-      // if true -> end game and set winner
       this.gameService.setWinnerPlayer(this.playerRoleWinningTheGame);
-      // set winning cells
-      // alert("Game over, player" + this.playerRoleWinningTheGame + "Wins!");
     } else {
       // Change active player
       if (this.activePlayer === this.playerOneRole) {
