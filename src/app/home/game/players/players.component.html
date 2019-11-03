@@ -14,8 +14,13 @@
     >
     <i
       class="mdl-typography--caption-color-contrast"
-      *ngIf="activePlayer === playerOneRole"
+      *ngIf="activePlayer === playerOneRole && !winnerPlayer"
       >(you)</i
+    >
+    <i
+      class="mdl-typography--caption-color-contrast"
+      *ngIf="winnerPlayer === playerOneRole"
+      >WINNER</i
     >
   </span>
 </div>
@@ -35,8 +40,13 @@
     >
     <i
       class="mdl-typography--caption-color-contrast"
-      *ngIf="activePlayer === playerTwoRole"
+      *ngIf="activePlayer === playerTwoRole && !winnerPlayer"
       >(you)</i
+    >
+    <i
+      class="mdl-typography--caption-color-contrast"
+      *ngIf="winnerPlayer === playerTwoRole"
+      >WINNER</i
     >
   </span>
 </div>
@@ -59,7 +69,6 @@
     *ngIf="playerTwo && matchId"
     class="mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect"
     (click)="onGameEnd()"
-  >
-    End/Leave game
-  </button>
+    [innerText]="winnerPlayer ? 'New game' : 'End/Leave game'"
+  ></button>
 </div>

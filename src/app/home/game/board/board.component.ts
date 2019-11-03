@@ -15,6 +15,7 @@ import { getWinnerValue } from "../game.utils";
 })
 export class BoardComponent implements OnInit {
   @Input() activePlayer: PlayerRole;
+  @Input() winnerPlayer: PlayerRole;
   @Input() board: Matrix = [];
   @Input() players: PlayerRole[] = [];
   inGamePlayers = 2;
@@ -55,9 +56,10 @@ export class BoardComponent implements OnInit {
     // check if active player winning the game
     this.playerRoleWinningTheGame = getWinnerValue(this.board);
     if (this.playerRoleWinningTheGame != null) {
-      alert("Game over, player" + this.playerRoleWinningTheGame + "Wins!");
       // if true -> end game and set winner
+      this.gameService.setWinnerPlayer(this.playerRoleWinningTheGame);
       // set winning cells
+      // alert("Game over, player" + this.playerRoleWinningTheGame + "Wins!");
     } else {
       // Change active player
       if (this.activePlayer === this.playerOneRole) {
