@@ -10,7 +10,23 @@ import { AppState } from "src/app/home/game/store/app.state";
 export class LocalStorageService {
   constructor() {}
 
-  init(): void {
+  private getGameData(): LocalStorageData {
+    const data = localStorage.getItem(STORAGE_ID);
+    return JSON.parse(data) || null;
+  }
+
+  private generateRandomUUID() {
+    return (
+      Math.random()
+        .toString(36)
+        .substring(2, 15) +
+      Math.random()
+        .toString(36)
+        .substring(2, 15)
+    );
+  }
+
+  public init(): void {
     if (!this.getGameData()) {
       const initialData: LocalStorageData = {
         matchId: null,
@@ -27,28 +43,24 @@ export class LocalStorageService {
     }
   }
 
-  get(): AppState {
+  // Helper function, same like getGameData with the return type difference only
+  public get(): AppState {
     const data = localStorage.getItem(STORAGE_ID);
     return JSON.parse(data) || null;
   }
 
-  getGameData(): LocalStorageData {
-    const data = localStorage.getItem(STORAGE_ID);
-    return JSON.parse(data) || null;
-  }
-
-  getMatchId(): string {
+  public getMatchId(): string {
     const { matchId } = this.getGameData();
     return matchId;
   }
 
-  setMatchId(matchId: string) {
+  public setMatchId(matchId: string) {
     const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
     existingData["matchId"] = matchId;
     localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
   }
 
-  getPlayerOne(): Player {
+  public getPlayerOne(): Player {
     const { playerOne } = this.getGameData();
     if (playerOne != null) {
       return playerOne;
@@ -56,7 +68,7 @@ export class LocalStorageService {
     return null;
   }
 
-  setPlayerOne() {
+  public setPlayerOne() {
     if (!this.getPlayerOne()) {
       const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
       existingData["playerOne"] = {
@@ -68,19 +80,12 @@ export class LocalStorageService {
     }
   }
 
-  getPlayerOneId() {
-    if (!this.getPlayerOne()) {
-      return null;
-    }
-    return this.getPlayerOne().id;
-  }
-
-  getPlayerTwo(): Player {
+  public getPlayerTwo(): Player {
     const { playerTwo } = this.getGameData();
     return playerTwo;
   }
 
-  setPlayerTwo() {
+  public setPlayerTwo() {
     if (!this.getPlayerTwo()) {
       const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
 
@@ -93,14 +98,7 @@ export class LocalStorageService {
     }
   }
 
-  getPlayerTwoId() {
-    if (!this.getPlayerTwo()) {
-      return null;
-    }
-    return this.getPlayerTwo().id;
-  }
-
-  setMatchBoard(board: Matrix) {
+  public setMatchBoard(board: Matrix) {
     const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
 
     existingData["matchBoard"] = board;
@@ -108,7 +106,7 @@ export class LocalStorageService {
     localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
   }
 
-  setActivePlayer(activePlayerRole: PlayerRole) {
+  public setActivePlayer(activePlayerRole: PlayerRole) {
     const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
 
     existingData["activePlayer"] = activePlayerRole;
@@ -116,15 +114,7 @@ export class LocalStorageService {
     localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
   }
 
-  getActivePlayer() {
-    const { activePlayer } = this.getGameData();
-    if (activePlayer != null) {
-      return activePlayer;
-    }
-    return null;
-  }
-
-  setWinnerPlayer(winnerPlayer: PlayerRole) {
+  public setWinnerPlayer(winnerPlayer: PlayerRole) {
     const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
 
     existingData["winnerPlayer"] = winnerPlayer;
@@ -132,7 +122,7 @@ export class LocalStorageService {
     localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
   }
 
-  setPlayerInGame(player: Player) {
+  public setPlayerInGame(player: Player) {
     const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
     const players = [...existingData["players"]];
     players.push(player);
@@ -141,7 +131,7 @@ export class LocalStorageService {
     localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
   }
 
-  setEndMatch(status: boolean) {
+  public setEndMatch(status: boolean) {
     const existingData = JSON.parse(localStorage.getItem(STORAGE_ID));
 
     existingData["endMatch"] = status;
@@ -149,18 +139,7 @@ export class LocalStorageService {
     localStorage.setItem(STORAGE_ID, JSON.stringify(existingData));
   }
 
-  generateRandomUUID() {
-    return (
-      Math.random()
-        .toString(36)
-        .substring(2, 15) +
-      Math.random()
-        .toString(36)
-        .substring(2, 15)
-    );
-  }
-
-  reset() {
+  public reset() {
     const resetExistingData = JSON.parse(localStorage.getItem(STORAGE_ID));
     resetExistingData["matchId"] = null;
     resetExistingData["playerOne"] = null;

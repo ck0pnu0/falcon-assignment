@@ -9,6 +9,7 @@ import { PlayerRole } from "../enums/player-role.enum";
 import { DEFAULT_MATCH_ID } from "../global.variables";
 import { LocalStorageService } from "./local-storage.service";
 import { Player } from "src/app/models/player.model";
+import { initialState } from "src/app/home/game/store/app.reducer";
 
 @Injectable()
 export class GameService {
@@ -29,7 +30,7 @@ export class GameService {
     );
   }
 
-  createMatch() {
+  public createMatch() {
     // Set initial Board
     const board = this.setBoard();
     const firstPlayerRole = PlayerRole.Player1;
@@ -56,44 +57,44 @@ export class GameService {
     this.store.dispatch(fromActions.startMatch({ game: startGameState }));
   }
 
-  setBoard(): Matrix {
+  public setBoard(): Matrix {
     const initiateBoard = generateMatrixModel(7, 6);
     this.localStorageService.setMatchBoard(initiateBoard);
     return initiateBoard;
   }
 
-  updateBoard(newBoard: Matrix) {
+  public updateBoard(newBoard: Matrix) {
     this.store.dispatch(fromActions.selectBoardCell({ newBoard }));
     this.localStorageService.setMatchBoard(newBoard);
   }
 
-  getMatchId(): Observable<string> {
+  public getMatchId(): Observable<string> {
     return this.store.pipe(select(fromGame.getMatchId));
   }
 
-  setActivePlayer(playerRole: PlayerRole) {
+  public setActivePlayer(playerRole: PlayerRole) {
     this.store.dispatch(fromActions.updateActivePlayer({ playerRole }));
     this.localStorageService.setActivePlayer(playerRole);
   }
 
-  getActivePlayerRole(): Observable<PlayerRole> {
+  public getActivePlayerRole(): Observable<PlayerRole> {
     return this.store.pipe(select(fromGame.activePlayerRole));
   }
 
-  setWinnerPlayer(playerRole: PlayerRole) {
+  public setWinnerPlayer(playerRole: PlayerRole) {
     this.store.dispatch(fromActions.updateWinnerPlayer({ playerRole }));
     this.localStorageService.setWinnerPlayer(playerRole);
   }
 
-  getWinnerPlayer(): Observable<PlayerRole> {
+  public getWinnerPlayer(): Observable<PlayerRole> {
     return this.store.pipe(select(fromGame.winnerPlayerRole));
   }
 
-  getPlayerOne(): Observable<Player> {
+  public getPlayerOne(): Observable<Player> {
     return this.store.pipe(select(fromGame.getPlayerOne));
   }
 
-  setPlayerTwo() {
+  public setPlayerTwo() {
     if (!this.localStorageService.getPlayerTwo()) {
       this.localStorageService.setPlayerTwo();
     }
@@ -104,38 +105,39 @@ export class GameService {
     this.setActivePlayer(PlayerRole.Player1);
   }
 
-  setPlayerTwoToMatch(player: Player) {
+  private setPlayerTwoToMatch(player: Player) {
     this.store.dispatch(
       fromActions.setSecondPlayerToMatch({ playerRole: player.role })
     );
     this.localStorageService.setPlayerInGame(player);
   }
 
-  getPlayerTwo(): Observable<Player> {
+  public getPlayerTwo(): Observable<Player> {
     return this.store.pipe(select(fromGame.getPlayerTwo));
   }
 
-  endMatch(winnerPlayerRole: PlayerRole) {
+  // In case that someone leaves the game
+  public leaveMatch(winnerPlayerRole: PlayerRole) {
     this.store.dispatch(
       fromActions.updateWinnerPlayer({ playerRole: winnerPlayerRole })
     );
-    this.store.dispatch(fromActions.endMatch({ matchEnded: true }));
+    this.store.dispatch(fromActions.leaveMatch({ matchEnded: true }));
   }
 
-  leaveMatch() {
+  public endMatch() {
     this.localStorageService.reset();
-    this.store.dispatch(fromActions.leaveMatch());
+    this.store.dispatch(fromActions.endMatch());
   }
 
-  activePlayer(): Observable<PlayerRole> {
+  public activePlayer(): Observable<PlayerRole> {
     return this.store.pipe(select(fromGame.activePlayerRole));
   }
 
-  getPlayers(): Observable<PlayerRole[]> {
+  public getPlayers(): Observable<PlayerRole[]> {
     return this.store.pipe(select(fromGame.getPlayersArr));
   }
 
-  getBoard(): Observable<Matrix> {
+  public getBoard(): Observable<Matrix> {
     return this.store.pipe(select(fromGame.getMatchBoard));
   }
 }

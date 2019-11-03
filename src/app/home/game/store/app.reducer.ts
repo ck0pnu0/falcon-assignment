@@ -2,7 +2,7 @@ import { Action, createReducer, on } from "@ngrx/store";
 import * as matchActions from "./app.actions";
 import { AppState } from "./app.state";
 
-const initialState: AppState = {
+export const initialState: AppState = {
   matchId: null,
   matchBoard: [],
   playerOne: null,
@@ -34,11 +34,11 @@ const matchReducer = createReducer(
     ...state,
     matchBoard: newBoard
   })),
-  on(matchActions.endMatch, (state, { matchEnded }) => ({
+  on(matchActions.leaveMatch, (state, { matchEnded }) => ({
     ...state,
     endMatch: matchEnded
   })),
-  on(matchActions.leaveMatch, state => initialState),
+  on(matchActions.endMatch, state => initialState),
   on(matchActions.setFirstPlayerToMatch, (state, { playerRole }) => {
     const playersArr = state.players;
     playersArr.push(playerRole);

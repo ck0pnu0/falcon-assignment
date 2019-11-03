@@ -9,8 +9,8 @@ export enum MatchActionTypes {
   JOIN_MATCH = "[Match] Join Match",
   SET_INITIAL_BOARD = "[Match] Set Initial Board",
   SELECT_CELL = "[Match] Select Board Cell",
-  END_MATCH = "[Match] End Match and Update Winner Player",
-  LEAVE_MATCH = "[Match] Leave Match and Reset Game",
+  LEAVE_MATCH = "[Match] End Match and Update Winner Player",
+  END_MATCH = "[Match] Leave Match and Reset Game",
   FIRST_PLAYER_MATCH = "[Match] Set First Player to Match",
   SECOND_PLAYER_MATCH = "[Match] Set Second Player to Match",
   ACTIVE_PLAYER = "[Match Players] Update Active Player",
@@ -37,11 +37,15 @@ export const selectBoardCell = createAction(
   MatchActionTypes.SELECT_CELL,
   props<{ newBoard: Matrix }>()
 );
-export const endMatch = createAction(
-  MatchActionTypes.END_MATCH,
+export const setGameStateFromLocalStorage = createAction(
+  MatchActionTypes.SET_DATA_FROM_LOCAL_STORAGE,
+  props<{ game: AppState }>()
+);
+export const leaveMatch = createAction(
+  MatchActionTypes.LEAVE_MATCH,
   props<{ matchEnded: boolean }>()
 );
-export const leaveMatch = createAction(MatchActionTypes.LEAVE_MATCH);
+export const endMatch = createAction(MatchActionTypes.END_MATCH);
 export const setFirstPlayerToMatch = createAction(
   MatchActionTypes.FIRST_PLAYER_MATCH,
   props<{ playerRole: PlayerRole }>()
@@ -67,8 +71,4 @@ export const setPlayerOne = createAction(
 export const setPlayerTwo = createAction(
   MatchActionTypes.PLAYER_TWO,
   props<{ playerTwo: Player }>()
-);
-export const setGameStateFromLocalStorage = createAction(
-  MatchActionTypes.SET_DATA_FROM_LOCAL_STORAGE,
-  props<{ game: AppState }>()
 );

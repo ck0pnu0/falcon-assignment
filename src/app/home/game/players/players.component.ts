@@ -28,6 +28,6 @@ export class PlayersComponent implements OnInit {
   }
 
   onGameEnd() {
-    this.gameService.leaveMatch();
+    this.gameService.endMatch();
   }
 }

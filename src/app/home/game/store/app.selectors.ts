@@ -1,17 +1,9 @@
-import {
-  createFeatureSelector,
-  createSelector,
-  MemoizedSelector
-} from "@ngrx/store";
+import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { AppState } from "./app.state";
 
 export const APP_KEY = "game";
-export const PLAYER_ONE = "playerOne";
-export const PLAYER_TWO = "playerTwo";
 
-const getAppState: MemoizedSelector<object, AppState> = createFeatureSelector<
-  AppState
->(APP_KEY);
+const getAppState = createFeatureSelector<AppState>(APP_KEY);
 
 export const getMatchState = createSelector(
   getAppState,
@@ -24,7 +16,7 @@ export const getMatchId = createSelector(
 );
 
 export const getMatchBoard = createSelector(
-  getMatchState,
+  getAppState,
   (state: AppState) => state.matchBoard
 );
 

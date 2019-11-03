@@ -9,8 +9,8 @@ import { PlayersComponent } from "./game/players/players.component";
 import { reducer } from "./game/store/app.reducer";
 import { APP_KEY } from "./game/store/app.selectors";
 import { HomeComponent } from "./home.component";
-import { ButtonsComponent } from './game/players/buttons/buttons.component';
-import { AvatarsComponent } from './game/players/avatars/avatars.component';
+import { ButtonsComponent } from "./game/players/buttons/buttons.component";
+import { AvatarsComponent } from "./game/players/avatars/avatars.component";
 
 @NgModule({
   declarations: [
