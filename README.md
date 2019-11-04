@@ -31,3 +31,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ### Game
 
 Please have in mind that, since I have troubles with making the provided webSockets to work on my side I've tried a bit different approach. I'm using localStorage instead in order to update the store in case of refreshing the page. Of course, this means that the game could be played in one tab/window. However, I've added a store (ngrx) to the project to show my ability to work with it and give you a hint of a similar way of using it in case that webSockets had been set and worked as expected.
+
+### Testing
+
+Replaced Jasmine with Jest for unit testing.
