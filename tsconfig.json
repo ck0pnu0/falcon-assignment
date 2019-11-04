@@ -11,9 +11,10 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
+    "esModuleInterop": true,
+    "types": ["jest"],
     "typeRoots": [
-      "node_modules/@types",
-      "webpack-env"
+      "node_modules/@types"
     ],
     "lib": [
       "es2018",
