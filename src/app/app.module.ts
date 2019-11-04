@@ -5,11 +5,10 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { FooterComponent } from "./footer/footer.component";
 import { HomeModule } from "./home/home.module";
 
 @NgModule({
-  declarations: [AppComponent, FooterComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
