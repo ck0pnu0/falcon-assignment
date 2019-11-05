@@ -12,6 +12,7 @@ import { Player } from "src/app/models/player.model";
 
 @Injectable()
 export class GameService {
+  private _matchId: string;
   constructor(
     private localStorageService: LocalStorageService,
     private store: Store<AppState>
@@ -23,6 +24,9 @@ export class GameService {
   }
 
   public onRefreshState() {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
+
     const gameState = this.localStorageService.get();
     this.store.dispatch(
       fromActions.setGameStateFromLocalStorage({ game: gameState })
@@ -30,9 +34,10 @@ export class GameService {
   }
 
   public createMatch() {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
     // Set initial Board
     const board = this.setBoard();
-    const firstPlayerRole = PlayerRole.Player1;
 
     // Update localStorage with host player
     this.localStorageService.setPlayerOne();
@@ -41,12 +46,13 @@ export class GameService {
     this.localStorageService.setMatchId(DEFAULT_MATCH_ID);
     const id = this.localStorageService.getMatchId();
     const firstPlayer = this.localStorageService.getPlayerOne();
+    this._matchId = id;
 
     const startGameState: Partial<AppState> = {
       matchId: id,
       matchBoard: board,
       playerOne: firstPlayer,
-      players: [firstPlayerRole]
+      players: [firstPlayer.role]
     };
 
     // Set first player to the localStorage player in game
@@ -63,6 +69,9 @@ export class GameService {
   }
 
   public updateBoard(newBoard: Matrix) {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
+
     this.store.dispatch(fromActions.selectBoardCell({ newBoard }));
     this.localStorageService.setMatchBoard(newBoard);
   }
@@ -72,6 +81,9 @@ export class GameService {
   }
 
   public setActivePlayer(playerRole: PlayerRole) {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
+
     this.store.dispatch(fromActions.updateActivePlayer({ playerRole }));
     this.localStorageService.setActivePlayer(playerRole);
   }
@@ -81,6 +93,9 @@ export class GameService {
   }
 
   public setWinnerPlayer(playerRole: PlayerRole) {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
+
     this.store.dispatch(fromActions.updateWinnerPlayer({ playerRole }));
     this.localStorageService.setWinnerPlayer(playerRole);
   }
@@ -94,6 +109,9 @@ export class GameService {
   }
 
   public setPlayerTwo() {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
+
     if (!this.localStorageService.getPlayerTwo()) {
       this.localStorageService.setPlayerTwo();
     }
@@ -105,6 +123,9 @@ export class GameService {
   }
 
   private setPlayerTwoToMatch(player: Player) {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
+
     this.store.dispatch(
       fromActions.setSecondPlayerToMatch({ playerRole: player.role })
     );
@@ -117,6 +138,9 @@ export class GameService {
 
   // In case that someone leaves the game
   public leaveMatch(winnerPlayerRole: PlayerRole) {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
+
     this.store.dispatch(
       fromActions.updateWinnerPlayer({ playerRole: winnerPlayerRole })
     );
@@ -124,6 +148,9 @@ export class GameService {
   }
 
   public endMatch() {
+    // Copy current state from the store in case that LocalStorage has been cleaned
+    this.copyStoreStateToLocalStorage();
+
     this.localStorageService.reset();
     this.store.dispatch(fromActions.endMatch());
   }
@@ -138,5 +165,14 @@ export class GameService {
 
   public getBoard(): Observable<Matrix> {
     return this.store.pipe(select(fromGame.getMatchBoard));
+  }
+
+  // Copy store state to the localStorage in case of it has been cleared during the game
+  private copyStoreStateToLocalStorage() {
+    if (!this.localStorageService.get()) {
+      this.store.pipe(select(fromGame.getMatchState)).subscribe(matchState => {
+        this.localStorageService.setStateFromStore(matchState);
+      });
+    }
   }
 }

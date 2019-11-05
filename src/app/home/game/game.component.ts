@@ -31,6 +31,7 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.matchId = this.localStorageService.getMatchId();
     this.matchId$ = this.gameService.getMatchId();
+    this.matchId = this.localStorageService.getMatchId();
     this.matchId$.pipe(takeUntil(this.onDestroy$)).subscribe(storeMatchId => {
       if (this.matchId != storeMatchId) {
         this.gameService.onRefreshState();
