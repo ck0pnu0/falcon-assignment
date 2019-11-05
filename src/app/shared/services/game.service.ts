@@ -9,6 +9,7 @@ import { PlayerRole } from "../enums/player-role.enum";
 import { DEFAULT_MATCH_ID } from "../global.variables";
 import { LocalStorageService } from "./local-storage.service";
 import { Player } from "src/app/models/player.model";
+import { take } from "rxjs/operators";
 
 @Injectable()
 export class GameService {
@@ -170,9 +171,14 @@ export class GameService {
   // Copy store state to the localStorage in case of it has been cleared during the game
   private copyStoreStateToLocalStorage() {
     if (!this.localStorageService.get()) {
-      this.store.pipe(select(fromGame.getMatchState)).subscribe(matchState => {
-        this.localStorageService.setStateFromStore(matchState);
-      });
+      this.store
+        .pipe(
+          select(fromGame.getMatchState),
+          take(1)
+        )
+        .subscribe(matchState => {
+          this.localStorageService.setStateFromStore(matchState);
+        });
     }
   }
 }
